@@ -1,0 +1,30 @@
+version: "3.5"
+services:
+  news-database:
+    restart: always
+    container_name: 'news_stat'
+    image: postgres
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env
+    networks:
+      - news_stat
+
+  news-stat:
+    build: .
+    depends_on:
+      - news-database
+    restart: always
+    ports:
+      - '8023:8023'
+    tty: true
+    volumes:
+      - .:/app
+    stdin_open: true
+    networks:
+      - news_stat
+
+networks:
+  news_stat:
+    name: news_stat
